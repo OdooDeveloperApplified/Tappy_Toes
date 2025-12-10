@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Helpdesk Ticket Pivot View for Dashboard -->
+    <record id="view_helpdesk_ticket_pivot_dashboard" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.pivot.dashboard</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <pivot string="Complaint Analysis">
+                <field name="tag_ids" type="row"/>
+                <field name="week_of_month" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action for Pivot Dashboard -->
+    <record id="action_helpdesk_ticket_pivot_dashboard" model="ir.actions.act_window">
+        <field name="name">Complaint Pivot Analysis</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_helpdesk_ticket_pivot_dashboard"/>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu for Pivot Analysis -->
+    <menuitem id="menu_helpdesk_pivot_dashboard" 
+              name="Pivot Analysis" 
+              parent="helpdesk.helpdesk_ticket_report_menu_main"
+              action="action_helpdesk_ticket_pivot_dashboard"
+              sequence="10"/>
+
+    <!-- Helpdesk Ticket SLA Pivot View for Unresolved Tickets Analysis -->   
+    <record id="view_helpdesk_ticket_sla_pivot" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.pivot</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <pivot string="Helpdesk SLA Report">
+                
+                <field name="user_id" type="row"/>
+                <field name="tag_ids" type="row"/>
+                <field name="name" type="row"/>
+                <field name="sla_deadline_days" type="measure" string="SLA Target"/>
+                <field name="days_since_created" type="measure" string="Days Since Created"/>
+                <field name="days_past_sla" type="measure" string="Days Past Due"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_sla_pivot_dashboard" model="ir.actions.act_window">
+        <field name="name">Unresloved Tickets Analysis</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_helpdesk_ticket_sla_pivot"/>
+        <!-- <field name="domain">[('stage_id.name', '!=', 'Solved')]</field> -->
+        <field name="context">{}</field>
+    </record>
+
+ 
+    <menuitem id="menu_helpdesk_pivot_dashboard" 
+              name="Unresolved Tickets Analysis" 
+              parent="helpdesk.helpdesk_ticket_report_menu_main"
+              action="action_sla_pivot_dashboard"
+              sequence="10"/>
+    
+    <!-- Cron action to recompute SLA fields daily -->
+    <record id="ir_cron_recompute_sla_fields_daily" model="ir.cron">
+        <field name="name">Recompute SLA Fields Daily</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="state">code</field>
+        <field name="code">model.recompute_sla_fields_daily()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

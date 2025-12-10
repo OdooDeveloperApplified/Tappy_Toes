@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="qualified_lost_reason_view_form" model="ir.ui.view">
+        <field name="name">qualified.lost.reason.form</field>
+        <field name="model">qualified.lost.reason</field>
+        <field name="arch" type="xml">
+            <form string="Qualified Lost Reason">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_lost_leads" type="object"
+                            class="oe_stat_button" icon="fa-star">
+                            <div class="o_stat_info">
+                                <field name="leads_count" class="o_stat_value"/>
+                                <span class="o_stat_text"> Leads</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <div>
+                            <label for="name"/>
+                        </div>
+                        <h1 class="mb32">
+                            <field name="name" placeholder="e.g. Too expensive" class="mb16"/>
+                        </h1>
+                        <field name="active" invisible="1"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="qualified_lost_reason_view_tree" model="ir.ui.view">
+        <field name="name">qualified.lost.reason.list</field>
+        <field name="model">qualified.lost.reason</field>
+        <field name="arch" type="xml">
+            <list string="Channel" editable="bottom">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Configuration/Lead & Opportunities/Lost Reasons Menu -->
+    <record id="qualified_lost_reason_action" model="ir.actions.act_window">
+        <field name="name">Qualified Lost Reasons</field>
+        <field name="res_model">qualified.lost.reason</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a Qualified Lost Reason
+          </p><p>
+            Use Qualified Lost Reasons to report on why opportunities are lost (e.g."Undercut by competitors").
+          </p>
+        </field>
+    </record>
+
+     <menuitem
+        id="menu_qualified_lost_reason"
+        name="Qualified Lost Reasons"
+        parent="crm.menu_crm_config_lead"
+        action="tappy_crm.qualified_lost_reason_action"
+        sequence="7"/>
+
+</odoo>

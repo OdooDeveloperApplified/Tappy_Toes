@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_hr_attendance_tree_late" model="ir.ui.view">
+        <field name="name">hr.attendance.tree.late</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <field name="check_out" position="after">
+                <field name="is_late"/>
+                <field name="late_minutes"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_attendance_settings_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.attendance</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='hr_attendance']/block[@name='kiosk_mode_setting_container']" position="before">
+                <block title="Custom Attendance Settings">
+                    <setting string="Start Time" company_dependent="1" help="Define the allowed start time for attendance.">
+                        <field name="attendance_start_time" widget="float_time"/>
+                    </setting>
+                    <setting string="End Time" company_dependent="1" help="Define the allowed end time for attendance.">
+                        <field name="attendance_end_time" widget="float_time"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

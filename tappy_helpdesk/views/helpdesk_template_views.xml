@@ -1,0 +1,118 @@
+<odoo>
+    <!-- Record to add custom fields in ticket form view of Helpdesk module -->
+    <record id="view_helpdesk_ticket_form_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='email_cc']" position="after">
+                <field name="staff_involved"/>
+                <field name="create_date"/>
+                <field name="solved_date"/>
+            </xpath>
+
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="complaint_tags_ids" widget="many2many_tags"/>
+                <field name="complaint_type"/>
+                <field name="incident_time"/>
+            </xpath>
+
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="string">Complaint Level</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Child Involved</attribute>
+            </xpath>
+            <!-- Code to remove/hide priority field(star field) -->
+            <xpath expr="//field[@name='priority']" position="attributes">
+                 <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Code to add Complaint Details page in Helpdesk notebook form view -->
+    <record id="view_helpdesk_ticket_sheet_form_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.sheet.form.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='description']" position="before">
+                <page name="complaint_details" string="Complaint Details">
+                    <group>
+                        <group>
+                            <field name="what_happened"/>
+                            <field name="nursery_action"/>
+                            <field name="parent_response"/>
+                        </group>
+                        <group>
+                            <field name="root_cause"/>
+                            <field name="prevention_measures"/>
+                            <field name="training_protocols"/>
+                        </group>    
+                    </group>  
+                </page>
+            </xpath> 
+        </field>
+    </record>
+
+    <!-- Code to remove priority field from the tree view and add the tags field in the list view -->
+    <record id="view_helpdesk_ticket_tree_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.tree.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.ticket_list_view_group_stage"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//field[@name='priority']" position="attributes">
+                <attribute name="optional">1</attribute>
+            </xpath>  -->
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="optional"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_list_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.list.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='priority']" position="attributes">
+                <attribute name="optional">1</attribute>
+            </xpath> 
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="optional"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Code to add group by filter for internal and external complaint: Complaint types -->
+    <record id="helpdesk_view_search_inherit_complaint_type" model="ir.ui.view">
+        <field name="name">helpdesk.search.inherit.complaint.type</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search_base"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='tag']" position="after">
+                <filter string="Complaint Type"
+                    name="complaint_type"
+                    context="{'group_by': 'complaint_type'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

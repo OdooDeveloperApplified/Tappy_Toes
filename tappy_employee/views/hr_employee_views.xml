@@ -1,0 +1,95 @@
+<odoo>
+    <!-- Record to add custom fields in hr employee form view of Employee module -->
+    <record id="view_hr_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">   
+            <xpath expr="//field[@name='identification_id']" position="attributes">
+                <attribute name="string">EID/UID No.</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='identification_id']" position="after">
+                <field name="eid_expiry_date"/>
+            </xpath>
+
+            <xpath expr="//field[@name='ssnid']" position="attributes">
+                <attribute name="string">Labour Card No.</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='work_location_id']" position="after">
+                <field name="joining_date"/>
+                <field name="total_salary"/>
+            </xpath>
+
+            <xpath expr="//field[@name='visa_no']" position="after">
+                <field name="visa_type_ids"/>
+                <field name="visa_issue_date"/>
+                <field name="sponsor_name"/>
+                <field name="visa_renewal_status" invisible="1"/>
+                <field name="work_permit_status" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='passport_id']" position="after">
+                <field name="passport_expiry_date"/>
+            </xpath>
+
+            <xpath expr="//field[@name='emergency_phone']" position="after">
+                <field name="emergency_relation"/>
+                <field name="emergency_address"/>
+            </xpath>
+
+             <xpath expr="//field[@name='bank_account_id']" position="after">
+                <field name="bank_info"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_helpdesk_tickets"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-ticket">
+                    <field name="helpdesk_ticket_count" widget="statinfo"
+                           string="Tickets"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//page[@name='public']" position="inside">
+                <group string="Warnings">
+                    <field name="warning_verbal"/>
+                    <field name="warning_count"/>
+                    <field name="documents"  widget="many2many_binary"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Code to add group after Family Status section in Private Information page of Employee notebook form view -->
+    <record id="view_hr_employee_sheet_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.sheet.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='personal_information']" position="inside">
+                <separator string="Occupational Health &amp; Safety"/>
+                <group>
+                    <group>
+                        <field name="insurance_number"/>
+                        <field name="insurance_issue"/>
+                        <field name="insurance_expiry"/>
+                        <field name="first_aid"/>
+                        <field name="first_aid_issue"/>
+                        <field name="first_aid_expiry"/>
+                    </group>
+                    <group>
+                        <field name="ohc"/>
+                        <field name="ohc_issue_date"/>
+                        <field name="ohc_expiry_date"/>
+                        <field name="fire_safety"/>
+                        <field name="fire_expiry_date"/>
+                        <field name="fire_issue_date"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

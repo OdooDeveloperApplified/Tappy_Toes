@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Visa Type Form View -->
+    <record id="view_visa_type_form" model="ir.ui.view">
+        <field name="name">visa.type.form</field>
+        <field name="model">visa.type</field>
+        <field name="arch" type="xml">
+            <form string="Visa Type">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+
+                <!-- Chatter -->
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Visa Type Tree View -->
+    <record id="view_visa_type_list" model="ir.ui.view">
+        <field name="name">visa.type.list</field>
+        <field name="model">visa.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    
+    <!-- Visa Type Action -->
+    <record id="action_visa_type" model="ir.actions.act_window">
+        <field name="name">Visa Type</field>
+        <field name="res_model">visa.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create and manage Visa types.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_visa_type"
+            name="Visa Types"
+            parent="hr.menu_config_employee"
+            action="action_visa_type"/>
+</odoo>

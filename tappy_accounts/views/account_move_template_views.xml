@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Record to add Brand field in Product form view -->
+    <record id="view_account_move_inherit" model="ir.ui.view">
+        <field name="name">account.move.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_vendor_bill_id']" position="after">
+                <field name="show_bank_details"/>
+            </xpath>
+        </field>
+    </record> 
+</odoo>

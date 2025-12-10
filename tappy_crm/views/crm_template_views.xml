@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Code to add Qualified lost button on crm form view -->
+    <record id="view_crm_lead_form_inherit_qualified_lost" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.qualified.lost</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <!-- Custom Qualified Lost button -->
+                <button name="action_qualified_lost"
+                        string="Qualified Lost"
+                        type="object"
+                        class="btn-secondary"/>
+            </xpath>
+            <!-- Code to add custom field under leads form -->
+            <xpath expr="//group[@name='categorization']" position="inside">
+                <field name="customer_status_ids"/>
+                <field name="lead_offer"/>
+                <field name="utm_source"/>
+                <field name="utm_medium"/>
+                <field name="utm_campaign"/>
+            </xpath>
+            <!-- Code to display the same above custom field under pipeline form view -->
+            <xpath expr="//page[@name='lead']//group[position()=3]" position="inside">
+                <field name="customer_status_ids"/>
+                <field name="lead_offer"/>
+                <field name="utm_source"/>
+                <field name="utm_medium"/>
+                <field name="utm_campaign"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Qualified Lost reason wizard view -->
+    <record id="view_qualified_lost_wizard_form" model="ir.ui.view">
+        <field name="name">qualified.lost.wizard.form</field>
+        <field name="model">qualified.lost.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Mark Qualified Lost">
+                <group>
+                    <field name="qualified_lost_reason_id"/>
+                    <field name="qualified_lost_feedback" placeholder="What went wrong?"/>
+                </group>
+                <footer>
+                    <button string="Mark as Qualified Lost" type="object" name="action_confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Code to add Qualified Lost filter before Lost filter -->
+    <record id="crm_lead_view_search_inherit_qualified_lost" model="ir.ui.view">
+        <field name="name">crm.lead.search.inherit.qualified.lost</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_lost']" position="before">
+                <filter string="Qualified Lost"
+                        name="qualified_lost_stage"
+                        domain="[('stage_id.name', '=', 'Qualified Lost')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Code to add Qualified Lost Reason under group by before Lost Reason group by -->
+    <record id="crm_lead_view_search_inherit_qualified_lost_reason" model="ir.ui.view">
+        <field name="name">crm.lead.search.inherit.qualified.lost.reason</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='lostreason']" position="before">
+                <filter string="Qualified Lost Reason" name="qualifiedlostreason" context="{'group_by':'qualified_lost_reason_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

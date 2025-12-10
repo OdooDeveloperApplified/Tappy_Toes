@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Server Action to redirect to web page -->
+    <record id="helpdesk_dashboard_server_action" model="ir.actions.server">
+        <field name="name">Helpdesk Dashboard</field>
+        <field name="model_id" ref="model_helpdesk_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = {
+                'type': 'ir.actions.act_url',
+                'url': '/helpdesk/dashboard/page',
+                'target': 'new',
+            }
+        </field>
+    </record>
+
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_helpdesk_dashboard" 
+              name="Dashboard" 
+              parent="helpdesk.menu_helpdesk_root" 
+              action="helpdesk_dashboard_server_action"
+              sequence="10"/>
+
+    <!-- Web Page Template -->
+    <template id="helpdesk_dashboard_page" name="Helpdesk Dashboard Page">
+        <t t-call="web.frontend_layout">
+            <div class="container-fluid mt-4">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h3 class="mb-0">
+                                    <i class="fa fa-tachometer mr-2"></i>
+                                    Complaint Dashboard
+                                </h3>
+                                <small id="dashboard-subtitle">Loading...</small>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <!-- Filter Controls -->
+                                <div class="d-inline-block mr-2">
+                                    <select id="year-select" class="form-control form-control-m d-inline-block" style="width: 80px;">
+                                        <!-- Years will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="d-inline-block mr-2">
+                                    <select id="month-select" class="form-control form-control-m d-inline-block" style="width: 120px;">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <button id="apply-filters" class="btn btn-light btn-m mr-1">
+                                    <i class="fa fa-filter mr-1"></i>Apply
+                                </button>
+                                <button class="btn btn-outline-light btn-m" onclick="location.reload()">
+                                    <i class="fa fa-refresh mr-1"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped mb-0" id="dashboard-table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="text-center" style="width: 80px;">Sr No</th>
+                                        <th style="width: 300px;">Particulars</th>
+                                        <th class="text-center" style="width: 120px;">Week 1</th>
+                                        <th class="text-center" style="width: 120px;">Week 2</th>
+                                        <th class="text-center" style="width: 120px;">Week 3</th>
+                                        <th class="text-center" style="width: 120px;">Week 4</th>
+                                        <th class="text-center" style="width: 100px;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-tbody">
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4">
+                                            <i class="fa fa-spinner fa-spin mr-2"></i>Loading data...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>
+                            <i class="fa fa-info-circle mr-1"></i>
+                            Last Updated: <span id="last-updated">Loading...</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <script type="text/javascript">
+                <![CDATA[
+                // Load dashboard data
+                document.addEventListener('DOMContentLoaded', function() {
+                    initializeFilters();
+                    loadDashboardData();
+                    
+                    // Add event listener for Apply button
+                    document.getElementById('apply-filters').addEventListener('click', function() {
+                        loadDashboardData();
+                    });
+                });
+                
+                function initializeFilters() {
+                    // Populate year dropdown (2025 to 2025 + 50 years)
+                    const yearSelect = document.getElementById('year-select');
+                    const currentYear = new Date().getFullYear();
+                    const currentMonth = new Date().getMonth() + 1;
+                    const startYear = 2025;
+                    const endYear = 2025 + 50; // 2075
+                    
+                    for (let year = startYear; year <= endYear; year++) {
+                        const option = document.createElement('option');
+                        option.value = year;
+                        option.textContent = year;
+                        if (year === currentYear || (currentYear < startYear && year === startYear)) {
+                            option.selected = true;
+                        }
+                        yearSelect.appendChild(option);
+                    }
+                    
+                    // Set current month as selected
+                    document.getElementById('month-select').value = currentMonth;
+                }
+                
+                async function loadDashboardData() {
+                    const year = document.getElementById('year-select').value;
+                    const month = document.getElementById('month-select').value;
+                    
+                    try {
+                        const response = await fetch('/helpdesk/dashboard/data', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'call',
+                                params: {
+                                    year: parseInt(year),
+                                    month: parseInt(month)
+                                }
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        const data = result.result;
+                        
+                        renderDashboard(data);
+                        updateSubtitle(data);
+                        
+                    } catch (error) {
+                        console.error('Error loading dashboard:', error);
+                        document.getElementById('dashboard-tbody').innerHTML = 
+                            '<tr><td colspan="7" class="text-center text-danger py-4">' +
+                            '<i class="fa fa-exclamation-triangle mr-2"></i>Error loading data</td></tr>';
+                    }
+                }
+                
+                function renderDashboard(data) {
+                    const tbody = document.getElementById('dashboard-tbody');
+                    let html = '';
+                    
+                    if (data.rows && data.rows.length > 0) {
+                        // Calculate week totals
+                        const weekTotals = [0, 0, 0, 0];
+                        let grandTotal = 0;
+                        
+                        // Render rows
+                        data.rows.forEach((row, index) => {
+                            html += '<tr>';
+                            html += '<td class="text-center font-weight-bold">' + (index + 1) + '</td>';
+                            html += '<td>' + (row.tag || 'Unknown') + '</td>';
+                            html += '<td class="text-center">' + (row.week_counts[0] || 0) + '</td>';
+                            html += '<td class="text-center">' + (row.week_counts[1] || 0) + '</td>';
+                            html += '<td class="text-center">' + (row.week_counts[2] || 0) + '</td>';
+                            html += '<td class="text-center">' + (row.week_counts[3] || 0) + '</td>';
+                            html += '<td class="text-center font-weight-bold">' + (row.total || 0) + '</td>';
+                            html += '</tr>';
+                            
+                            // Calculate totals
+                            row.week_counts.forEach((count, weekIndex) => {
+                                weekTotals[weekIndex] += count || 0;
+                                grandTotal += count || 0;
+                            });
+                        });
+                        
+                        // Add total row
+                        html += '<tr class="bg-light font-weight-bold">';
+                        html += '<td class="text-center">' + (data.rows.length + 1) + '</td>';
+                        html += '<td>Total</td>';
+                        html += '<td class="text-center">' + weekTotals[0] + '</td>';
+                        html += '<td class="text-center">' + weekTotals[1] + '</td>';
+                        html += '<td class="text-center">' + weekTotals[2] + '</td>';
+                        html += '<td class="text-center">' + weekTotals[3] + '</td>';
+                        html += '<td class="text-center">' + grandTotal + '</td>';
+                        html += '</tr>';
+                        
+                    } else {
+                        const monthName = data.month_name || 'Selected Period';
+                        const year = data.selected_year || '';
+                        html = '<tr><td colspan="7" class="text-center text-muted py-4">' +
+                               '<i class="fa fa-info-circle mr-2"></i>No complaint data found for ' + monthName + ' ' + year + '</td></tr>';
+                    }
+                    
+                    tbody.innerHTML = html;
+                    document.getElementById('last-updated').textContent = new Date().toLocaleString();
+                }
+                
+                function updateSubtitle(data) {
+                    const monthName = data.month_name || 'Unknown Month';
+                    const year = data.selected_year || 'Unknown Year';
+                    const companyName = data.company_name || 'Company';
+                    document.getElementById('dashboard-subtitle').textContent = monthName + ' ' + year + ' ' + companyName;
+                }
+                ]]>
+            </script>
+            
+            <style>
+                #dashboard-subtitle {
+                    display: block;
+                    margin-top: 5px;
+                    font-size: 0.9rem;
+                    opacity: 0.9;
+                }
+            </style>
+        </t>
+    </template>
+</odoo>
