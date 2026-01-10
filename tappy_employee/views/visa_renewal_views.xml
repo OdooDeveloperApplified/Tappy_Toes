@@ -5,6 +5,7 @@
     <record id="view_employee_visa_renewal_tree" model="ir.ui.view">
         <field name="name">employee.visa.renewal.tree</field>
         <field name="model">hr.employee</field>
+        <field name="priority" eval="18"/> 
         <field name="arch" type="xml">
             <list string="Employee Visa Renewals" create="0">
                 <field name="name"/>
@@ -35,6 +36,7 @@
     <record id="view_employee_work_permit_renewal_tree" model="ir.ui.view">
         <field name="name">employee.work.permit.renewal.tree</field>
         <field name="model">hr.employee</field>
+        <field name="priority" eval="20"/> 
         <field name="arch" type="xml">
             <list string="Employee Work Permit Renewals" create="0">
                 <field name="name"/>
@@ -63,6 +65,7 @@
     <record id="view_employee_passport_renewal_tree" model="ir.ui.view">
         <field name="name">employee.passport.renewal.tree</field>
         <field name="model">hr.employee</field>
+        <field name="priority" eval="22"/> 
         <field name="arch" type="xml">
             <list string="Employee Passport Renewals" create="0">
                 <field name="name"/>
@@ -91,6 +94,7 @@
     <record id="view_employee_eid_renewal_tree" model="ir.ui.view">
         <field name="name">employee.eid.renewal.tree</field>
         <field name="model">hr.employee</field>
+        <field name="priority" eval="24"/> 
         <field name="arch" type="xml">
             <list string="Employee EID Renewals" create="0">
                 <field name="name"/>
@@ -119,6 +123,7 @@
     <record id="view_employee_insurance_renewal_tree" model="ir.ui.view">
         <field name="name">employee.insurance.renewal.tree</field>
         <field name="model">hr.employee</field>
+        <field name="priority" eval="26"/> 
         <field name="arch" type="xml">
             <list string="Employee Insurance Renewals" create="0">
                 <field name="name"/>

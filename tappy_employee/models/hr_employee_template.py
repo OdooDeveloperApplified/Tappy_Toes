@@ -189,3 +189,5 @@ class VisaType(models.Model):
     
     name = fields.Char(string='Visa Type')
 
+
+
