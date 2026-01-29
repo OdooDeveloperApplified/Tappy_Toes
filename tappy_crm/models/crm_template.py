@@ -4,11 +4,27 @@ from odoo.exceptions import ValidationError
 class CrmLead(models.Model):
     _inherit = "crm.lead"
 
+    location_name = fields.Many2one('res.company',string="Location")
     qualified_lost_reason_id = fields.Many2one('qualified.lost.reason', string="Qualified Lost Reason")
     lead_offer = fields.Char(string="Lead Offer")
     utm_source = fields.Char(string="UTM Source")
     utm_medium = fields.Char(string="UTM Medium")
     utm_campaign = fields.Char(string="UTM Campaign")
+    utm_content = fields.Char (string="Utm Content")
+    utm_term = fields.Char (string="Utm Term")
+    landing_page_url = fields.Char (string="Landing Page Url")
+    gclid = fields.Char (string='gclid (Google Ads)')
+    fbclid = fields.Char (string='fbclid (Meta)')
+    ttclid = fields.Char (string="ttclid (TikTok)")
+    lead_source = fields.Selection(
+        [
+            ('website', 'Website'),
+            ('meta', 'Meta'),
+            ('google', 'Google'),
+            ('tiktok', 'TikTok'),
+        ],
+        string='Lead Source'
+    )
     customer_status_ids = fields.Many2one('customer.status', string='Customer Status')
     
     ################## Code to add lost leads into the pivot view starts ###################

@@ -6,6 +6,32 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="location_name"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Tracking &amp; Source">
+                    <group>
+                        <group>
+                            <field name="lead_source" />
+                            <field name="utm_source"/>
+                            <field name="utm_medium"/>
+                            <field name="utm_campaign"/>
+                            <field name="utm_content" />
+                        </group>
+                        <group>
+                            <field name="utm_term" />
+                            <field name="landing_page_url" />
+                            <field name="gclid" />
+                            <field name="fbclid" />
+                            <field name="ttclid" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            
             <xpath expr="//header" position="inside">
                 <!-- Custom Qualified Lost button -->
                 <button name="action_qualified_lost"
@@ -17,9 +43,9 @@
             <xpath expr="//group[@name='categorization']" position="inside">
                 <field name="customer_status_ids"/>
                 <field name="lead_offer"/>
-                <field name="utm_source"/>
+                <!-- <field name="utm_source"/>
                 <field name="utm_medium"/>
-                <field name="utm_campaign"/>
+                <field name="utm_campaign"/> -->
             </xpath>
             <!-- Code to display the same above custom field under pipeline form view -->
             <xpath expr="//page[@name='lead']//group[position()=3]" position="inside">
