@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_visa_type,access.visa.type,tappy_employee.model_visa_type,base.group_user,1,1,1,1
-
+access_gamification_badge_employee,access.gamification.badge.employee,tappy_employee.model_gamification_badge_employee,base.group_user,1,1,1,1
+access_gamification_badge_employee_wizard,access.gamification.badge.employee.wizard,tappy_employee.model_gamification_badge_employee_wizard,base.group_user,1,1,1,1

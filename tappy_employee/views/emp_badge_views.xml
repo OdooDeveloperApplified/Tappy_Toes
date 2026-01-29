@@ -1,0 +1,80 @@
+<odoo>
+    <record id="view_grant_employee_badge_wizard" model="ir.ui.view">
+        <field name="name">grant.employee.badge.wizard</field>
+        <field name="model">gamification.badge.employee.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Grant Badge To">
+                <group>
+                    <field name="badge_id"/>
+                </group>
+                <group>
+                    <span>Who would you like to reward?</span>
+                    <field name="employee_id" nolabel="1" colspan="2"/>
+                    <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters" colspan="2"/>
+                </group>
+                <footer>
+                    <button string="Grant Badge"
+                            type="object"
+                            name="action_grant_badge"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_grant_employee_badge" model="ir.actions.act_window">
+        <field name="name">Grant Badge To</field>
+        <field name="res_model">gamification.badge.employee.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="employee_badge"
+              name="Grant Badge"
+              parent="hr.menu_hr_root"
+              action="action_grant_employee_badge"
+              />
+    
+    <record id="gamification_badge_employee_kanban_view" model="ir.ui.view">
+        <field name="name">gamification.badge.employee.kanban</field>
+        <field name="model">gamification.badge.employee</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column">
+                <field name="badge_id"/>
+                <field name="sender_id"/>
+                <field name="create_date"/>
+
+                <templates>
+                    <t t-name="kanban-box" class="row g-0">
+                        <div class="o_kanban_record o_kanban_badge">
+                            <aside class="col-2">
+                                <img t-att-src="kanban_image('gamification.badge', 'image_128', record.badge_id.raw_value)"
+                                    alt="Badge"/>
+                            </aside>
+                            <main class="col ps-2">
+
+                                <div>
+                                    <strong>
+                                        <t t-esc="record.badge_id.value"/>
+                                    </strong>
+
+                                    <div class="text-muted">
+                                        Granted by
+                                        <t t-esc="record.sender_id.value"/>
+                                    </div>
+
+                                    <div class="text-muted">
+                                        <t t-esc="record.create_date.value"/>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+</odoo>

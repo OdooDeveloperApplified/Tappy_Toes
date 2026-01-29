@@ -60,8 +60,32 @@
                     <field name="documents"  widget="many2many_binary"/>
                 </group>
             </xpath>
+            <xpath expr="//page[@name='public']" position="after">
+                <page string="My Badges">
+                    <field name="employee_badge_ids" mode="kanban"  context="{'kanban_view_ref': 'tappy_employee.gamification_badge_employee_kanban_view'}">
+                        <!-- <list>
+                            <field name="badge_id"/>
+                            <field name="sender_id"/>
+                            <field name="create_date"/>
+                        </list> -->
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
+
+    <!-- Code to hide the default Received Badges tab which appears, as customization was done because default odoo uses user_id and required workflow 
+    was for employee_id which are not users..so needed to hide the default Received badges tab and instead added My badges tab -->
+    <record id="hide_received_badges_tab_inherit" model="ir.ui.view">
+        <field name="name">hide.received.badges</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_gamification.hr_hr_employee_view_form"/>
+        <field name="arch" type="xml">  
+            <xpath expr="//page[@name='received_badges']" position="replace">
+            </xpath>
+
+        </field>
+    </record> 
 
     <!-- Code to add group after Family Status section in Private Information page of Employee notebook form view -->
     <record id="view_hr_employee_sheet_form_inherit" model="ir.ui.view">

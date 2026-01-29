@@ -10,6 +10,7 @@
         'views/hr_employee_views.xml',
         'views/visa_renewal_views.xml',
         'views/visa_type_views.xml',
+        'views/emp_badge_views.xml',
     ],
    
     'installable': True,

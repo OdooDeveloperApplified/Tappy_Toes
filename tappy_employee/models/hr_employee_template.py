@@ -33,6 +33,8 @@ class EmployeeTemplate(models.Model):
         'doc_id', 'attach_id', string="Warning Documents", copy=False,
         help='You can attach the copy of your document')
     warning_verbal = fields.Integer(string="Warning/s (verbal)")
+    employee_badge_ids = fields.One2many('gamification.badge.employee','employee_id',string='Badges')
+
 
     ################ Visa Renewal Status Computation starts ################
     visa_renewal_status = fields.Selection([
