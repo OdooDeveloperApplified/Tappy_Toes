@@ -26,7 +26,118 @@ class CrmLead(models.Model):
         string='Lead Source'
     )
     customer_status_ids = fields.Many2one('customer.status', string='Customer Status')
-    
+    lead_owner = fields.Char(string="Lead Owner")
+
+    # Qualification fields
+    preferred_offer = fields.Selection([
+        ('online_learning', 'Online Learning'),
+        ('learning_pods', 'Learning Pods'),
+        ('at_home_service', 'At Home Service'),
+        ('unknown', 'Unknown'),
+    ], string="Preferred Offer")
+    qualification_status = fields.Selection([
+        ('unreviewed', 'Unreviewed'),
+        ('needs_qualification', 'Needs Qualification'),
+        ('qualified', 'Qualified'),
+        ('not_fit', 'Not Fit'),
+    ], string="Qualification Status", default='unreviewed')
+    start_timeline = fields.Selection([
+        ('immediate', 'Immediate'),
+        ('this_week', 'This Week'),
+        ('this_month', 'This Month'),
+        ('next_term', 'Next Term'),
+        ('unknown', 'Unknown'),
+    ], string="Start Timeline")
+    parent_main_concern = fields.Many2many('parent.concern', string="Parent's Main Concern")
+    decision_maker = fields.Selection([
+        ('parent', 'Parent Decides Alone'),
+        ('family', 'Needs Family discussion'),
+        ('unknown', 'Unknown'),
+    ], string="Decision Maker")
+
+    # Sales workflow fields
+    last_contact_summary = fields.Text(string="Last Contact Summary", required=True)
+    next_followup_date = fields.Date(string="Next Follow-up Date")
+    contact_attempt_count = fields.Integer(string="Contact Attempt Count", default=0)
+    coverage_fit = fields.Selection([
+        ('in_area', 'In Area'),
+        ('out_of_area', 'Out of Area'),
+        ('online_only', 'Online Only'),
+        ('unknown', 'Unknown'),
+    ], string="Coverage Fit")
+    escalation_needed = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    ], string="Escalation Needed", default='no')
+    escalation_type = fields.Selection([
+        ('pricing', 'Pricing'),
+        ('capacity', 'Capacity'),       
+        ('service_area', 'Service Area'),
+        ('compliance', 'Compliance'),
+        ('complaint', 'Complaint'),
+        ('duplicate', 'Duplicate'),
+        ('other', 'Other'),
+    ], string="Escalation Type")
+    close_reason = fields.Selection([
+        ('no_response', 'No Response'),
+        ('no_longer_needed', 'No Longer Needed'),
+        ('chose_another_provider', 'Chose Another Provider'),                  
+        ('out_of_area', 'Out of Area'),
+        ('wrong_offer', 'Wrong Offer'),
+        ('child_too_old', 'Child Too Old'),
+        ('wrong_number', 'Wrong Number'),
+        ('duplicate', 'Duplicate'),
+        ('spam', 'Spam'),
+        ('price_objection', 'Price Objection'),
+        ('future_interest', 'Future Interest'),
+    ], string="Close Reason")
+
+    # Stage milestone dates fields
+    appointment_date = fields.Datetime(string="Appointment Date/Time")
+    fees_sent_date = fields.Date(string="Fees Sent Date")
+    trial_start_date = fields.Date(string="Trial Start Date")
+    won_date = fields.Date(string="Won Date")
+    currency_id = fields.Many2one('res.currency',related='company_id.currency_id',store=True,readonly=True)
+    enrollment_value = fields.Monetary(string="Enrollment Value",currency_field='currency_id')
+
+    # Reactivation fields
+    legacy_ac_deal_id = fields.Char(string="Legacy AC Deal ID")
+    legacy_ac_status = fields.Selection([
+        ('open', 'Open'),
+        ('lost', 'Lost'),  
+        ('won', 'Won'),         
+        ('unknown', 'Unknown'),
+    ], string="Legacy AC Status")
+    legacy_ac_stage = fields.Selection([
+        ('fees_sent', 'Fees Sent'),
+        ('appointment_booked', 'Appointment Booked'),         
+        ('appointment_attended', 'Appointment Attended'),
+        ('appointment_not_attended', 'Appointment Not Attended'),
+        ('attended', 'Attended'),
+        ('new_lead', 'New Lead'),
+        ('no_history', 'No History'),
+    ], string="Legacy AC Stage")
+    legacy_lost_reason = fields.Char(string="Legacy Lost Reason")
+    reactivation_segment = fields.Selection([
+        ('priority_open', 'Priority Open'),
+        ('priority_lost', 'Priority Lost'),
+        ('contacts_only', 'Contacts Only'),
+        ('nurture', 'Nurture'),
+        ('archive_review', 'Archive Review'),
+        ('past_customer', 'Past Customer'),
+    ], string="Reactivation Segment")
+    reactivation_priority = fields.Selection([
+        ('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low'),
+    ], string="Reactivation Priority")
+    recommended_first_action = fields.Selection([
+        ('call_first', 'Call First'),
+        ('whatsapp_first', 'WhatsApp First'),
+        ('first_review', 'First Review'),
+    ], string="Recommended First Action")
+
+
     ################## Code to add lost leads into the pivot view starts ###################
     stage_display = fields.Char(
         string="Stage (Pivot)",
@@ -75,6 +186,24 @@ class CrmLead(models.Model):
         
         # Step 2: Then call super() to let default Odoo logic execute
         return super(CrmLead, self).action_set_lost(**kwargs)
+    
+    # Code to add requirement contraints based on stage
+    @api.constrains('stage_id', 'appointment_date', 'fees_sent_date', 'won_date')
+    def _check_stage_requirements(self):
+        for lead in self:
+            stage = lead.stage_id.name
+
+            if stage in ['Walk-Ins', 'Visit to Nursery'] and not lead.appointment_date:
+                raise ValidationError("Please enter Appointment Date to proceed.")
+
+            if stage == 'Fees Sent' and not lead.fees_sent_date:
+                raise ValidationError("Please enter Fees Sent Date to proceed.")
+
+            if stage == 'Won' and not lead.won_date:
+                raise ValidationError("Please enter Won Date to proceed.")
+            
+            if stage == 'Qualified Lost' and not lead.close_reason:
+                raise ValidationError("Please provide Close Reason to proceed.")
     
 class QualifiedLostWizard(models.TransientModel):
     _name = 'qualified.lost.wizard'
@@ -134,3 +263,10 @@ class CustomerStatus(models.Model):
     _rec_name = "customer_status"
 
     customer_status = fields.Char(string="Customer Status")
+
+class ParentConcern(models.Model):
+    _name = 'parent.concern'
+    _description = 'Parent Concern' 
+    _inherit = ['mail.thread']
+    
+    name = fields.Char(string='Parent Concern')

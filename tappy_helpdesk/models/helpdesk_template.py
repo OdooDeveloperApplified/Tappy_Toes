@@ -9,7 +9,7 @@ class HelpdeskTemplate(models.Model):
     _inherit = "helpdesk.ticket"
 
     complaint_tags_ids = fields.Many2many('complaint.tags', string='Complaint Tags', required=True)
-    staff_involved = fields.Many2one('hr.employee', string='Staff Involved')
+    staff_involved = fields.Many2many('hr.employee', string='Staff Involved')
     incident_time = fields.Datetime(string='Incident Time',required=True)
     
     # Complaint Investigation fields

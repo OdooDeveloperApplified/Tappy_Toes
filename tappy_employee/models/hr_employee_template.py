@@ -35,13 +35,18 @@ class EmployeeTemplate(models.Model):
     warning_verbal = fields.Integer(string="Warning/s (verbal)")
     employee_badge_ids = fields.One2many('gamification.badge.employee','employee_id',string='Badges')
 
+    ######## Sync Code documents starts ###############
+    # def action_sync_documents(self):
+    #     self.env['document.sync'].sync_employee_documents(self.id)
+    ######## Sync Code documents ends ###############
+
 
     ################ Visa Renewal Status Computation starts ################
     visa_renewal_status = fields.Selection([
         ('active', 'Active'),
         ('expiring_soon', 'Expiring Soon'),
         ('expired', 'Expired')
-    ], string='Visa Renewal Status', compute='_compute_visa_renewal_status', store=True)
+    ], string='Visa Renewal Status', compute='_compute_visa_renewal_status')
 
     @api.depends('visa_expire')
     def _compute_visa_renewal_status(self):
@@ -65,7 +70,7 @@ class EmployeeTemplate(models.Model):
         ('active', 'Active'),
         ('expiring_soon', 'Expiring Soon'),
         ('expired', 'Expired')
-    ], string='Work Permit Status', compute='_compute_work_permit_status', store=True)
+    ], string='Work Permit Status', compute='_compute_work_permit_status')
 
     @api.depends('work_permit_expiration_date')
     def _compute_work_permit_status(self):
@@ -89,7 +94,7 @@ class EmployeeTemplate(models.Model):
         ('active', 'Active'),
         ('expiring_soon', 'Expiring Soon'),
         ('expired', 'Expired')
-    ], string='Passport Renewal Status', compute='_compute_passport_renewal_status', store=True)
+    ], string='Passport Renewal Status', compute='_compute_passport_renewal_status')
 
     @api.depends('passport_expiry_date')
     def _compute_passport_renewal_status(self):
@@ -113,7 +118,7 @@ class EmployeeTemplate(models.Model):
         ('active', 'Active'),
         ('expiring_soon', 'Expiring Soon'),
         ('expired', 'Expired')
-    ], string='Emirates ID Renewal Status', compute='_compute_eid_renewal_status', store=True)
+    ], string='Emirates ID Renewal Status', compute='_compute_eid_renewal_status')
 
     @api.depends('eid_expiry_date')
     def _compute_eid_renewal_status(self):
@@ -137,7 +142,7 @@ class EmployeeTemplate(models.Model):
         ('active', 'Active'),
         ('expiring_soon', 'Expiring Soon'),
         ('expired', 'Expired')
-    ], string='Insurance Renewal Status', compute='_compute_insurance_renewal_status', store=True)
+    ], string='Insurance Renewal Status', compute='_compute_insurance_renewal_status')
 
     @api.depends('insurance_expiry')
     def _compute_insurance_renewal_status(self):

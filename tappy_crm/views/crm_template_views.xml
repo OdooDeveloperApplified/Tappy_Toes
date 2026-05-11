@@ -11,8 +11,18 @@
                 <field name="location_name"/>
             </xpath>
 
+            <!-- For Opportunity -->
+            <xpath expr="(//field[@name='user_id'])[1]" position="after">
+                <field name="lead_owner"/>
+            </xpath>
+
+            <!-- For Lead -->
+            <xpath expr="(//field[@name='user_id'])[2]" position="after">
+                <field name="lead_owner"/>
+            </xpath>
+
             <xpath expr="//notebook" position="inside">
-                <page string="Tracking &amp; Source">
+                <page string="Tracking &amp; Source" name="tracking_source">
                     <group>
                         <group>
                             <field name="lead_source" />
@@ -30,6 +40,51 @@
                         </group>
                     </group>
                 </page>
+            </xpath>
+
+            <xpath expr="//notebook/page[@name='tracking_source']" position="after">
+                <page string="Qualification" name="qualification">
+                    <group>
+                        <field name = "preferred_offer"/>
+                        <field name = "qualification_status"/>
+                        <field name = "start_timeline"/>
+                        <field name = "parent_main_concern" widget="many2many_tags"/>
+                        <field name = "decision_maker"/>
+                    </group>
+                </page>
+                <page string="Lead Extra Information" name="lead_extra_information">
+                    <group>
+                        <group string="Stage Milestone Dates" name="stage_milestone_dates">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="appointment_date"/>
+                            <field name="fees_sent_date"/>
+                            <field name="trial_start_date"/>
+                            <field name="won_date"/>
+                            <field name="enrollment_value"/>
+                        </group>
+                        <group string="Reactivation details" name="reactivation_details">
+                            <field name="legacy_ac_deal_id"/>
+                            <field name="legacy_ac_status"/>
+                            <field name="legacy_ac_stage"/>
+                            <field name="legacy_lost_reason"/>
+                            <field name="reactivation_segment"/>
+                            <field name="reactivation_priority"/>
+                            <field name="recommended_first_action"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//group[@name='lead_priority']" position="after">
+                <group string="Sales workflow details" name="sales_workflow_details">
+                    <field name="last_contact_summary"/>
+                    <field name="next_followup_date"/>
+                    <field name="contact_attempt_count"/>
+                    <field name="coverage_fit"/>
+                    <field name="escalation_needed" widget="radio"/>
+                    <field name="escalation_type" invisible="escalation_needed == 'no'"/>
+                    <field name="close_reason"/>
+                </group>
             </xpath>
             
             <xpath expr="//header" position="inside">
@@ -101,4 +156,10 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Remove default -->
+    <record id="crm.crm_lead_action_pipeline" model="ir.actions.act_window">
+        <field name="context">{}</field>
+    </record>
+   
 </odoo>

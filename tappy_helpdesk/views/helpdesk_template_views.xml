@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             
             <xpath expr="//field[@name='email_cc']" position="after">
-                <field name="staff_involved"/>
+                <field name="staff_involved" widget="many2many_tags"/>
                 <field name="create_date"/>
                 <field name="solved_date"/>
             </xpath>

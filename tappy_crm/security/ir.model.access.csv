@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_qualified_lost_wizard,access.qualified.lost.wizard,tappy_crm.model_qualified_lost_wizard,base.group_user,1,1,1,1
 access_qualified_lost_reason,access.qualified.lost.reason,tappy_crm.model_qualified_lost_reason,base.group_user,1,1,1,1
 access_customer_status,access.customer.status,tappy_crm.model_customer_status,base.group_user,1,1,1,1
+access_parent_concern,access.parent.concern,tappy_crm.model_parent_concern,base.group_user,1,1,1,1

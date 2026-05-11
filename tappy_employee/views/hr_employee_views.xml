@@ -71,6 +71,14 @@
                     </field>
                 </page>
             </xpath>
+            <!-- Sync Documents code: starts -->
+            <!-- <xpath expr="//header" position="inside">
+                <button name="action_sync_documents"
+                        string="Sync Documents"
+                        type="object"
+                        class="btn-primary"/>
+            </xpath> -->
+            <!-- Sync Documents code:ends -->
         </field>
     </record>
 

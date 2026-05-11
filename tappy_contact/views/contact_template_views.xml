@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Record to add custom fields in Contacts form view -->
+    <record id="view_contact_template_form_inherit" model="ir.ui.view">
+        <field name="name">contact.template.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='contact_addresses']" position="before">
+                <page string="Child and Family Data" name="child_family_data">
+                    <group>
+                        <field name = "child_name"/>
+                        <field name = "child_birthday"/>
+                        <field name = "child_age_band"/>
+                        <field name = "number_of_children"/>
+                        <field name = "sibling_notes"/>
+                        <field name = "exisiting_student" widget="radio"/>
+                        <field name = "exisiting_family" widget="radio"/>
+                    </group>
+                </page>
+                <page string="Contact Preferences" name="contact_preferences">
+                    <group>
+                        <field name = "preferred_contact_method"/>
+                        <field name = "preferred_language"/>
+                        <field name = "whatsapp_number"/>
+                        <field name = "preferred_branch"/>
+                        <field name = "do_not_contact" widget="radio"/>
+                    </group>
+                </page>
+                <page string="Legacy import fields" name="legacy_import_fields">
+                    <group>
+                        <field name = "original_ac_contact_id"/>
+                        <field name = "legacy_source"/>
+                        <field name = "legacy_tags_raw"/>
+                        <field name = "consent_to_contact"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record> 
+</odoo> 

@@ -8,8 +8,6 @@ class CompanyDocument(models.Model):
     _description = "Company Document"
     _inherit = ["mail.thread", "mail.activity.mixin"]
    
-
-    
     name = fields.Char(string="License Name", required=True, tracking=True)
 
     company_id = fields.Many2one(
@@ -32,14 +30,13 @@ class CompanyDocument(models.Model):
     days_to_expiry = fields.Integer(
         string="Days to Expiry",
         compute="_compute_days_to_expiry",
-        store=True
     )
 
     renewal_state = fields.Selection([
         ("valid", "Valid"),
         ("expiring", "Expiring Soon"),
         ("expired", "Expired"),
-    ], compute="_compute_renewal_state", store=True)
+    ], compute="_compute_renewal_state")
 
     attachment_ids = fields.Many2many(
         "ir.attachment",
@@ -88,6 +85,65 @@ class CompanyDocument(models.Model):
 
     #     for license in expiring_licenses:
     #         license.message_post(
-    #             body=f"⚠️ License <b>{license.name}</b> is expiring on <b>{license.expiry_date}</b>."
+    #             body=f"License <b>{license.name}</b> is expiring on <b>{license.expiry_date}</b>."
     #         )
-    
+
+################# Document sync code starts: Also related code present in tappy_employee################
+# class DocumentSync(models.Model):
+#     _name = 'document.sync'
+#     _description = 'Sync Employee Attachments to Documents'
+
+#     @api.model
+#     def sync_employee_documents(self, employee_id=None):
+
+#         # If no employee passed → take first pending employee
+#         if not employee_id:
+#             employee = self.env['hr.employee'].search([], limit=1)
+#         else:
+#             employee = self.env['hr.employee'].browse(employee_id)
+
+#         if not employee:
+#             return {
+#                 'type': 'ir.actions.client',
+#                 'tag': 'display_notification',
+#                 'params': {
+#                     'title': 'Done',
+#                     'message': 'No employees found.',
+#                     'type': 'success',
+#                 }
+#             }
+
+#         # Only this employee's attachments
+#         attachments = self.env['ir.attachment'].search([
+#             ('res_model', '=', 'hr.employee'),
+#             ('res_id', '=', employee.id),
+#             ('type', '=', 'binary')
+#         ])
+
+#         created_count = 0
+
+#         for att in attachments:
+#             existing_doc = self.env['documents.document'].sudo().search([
+#                 ('attachment_id', '=', att.id)
+#             ], limit=1)
+
+#             if not existing_doc:
+#                 self.env['documents.document'].sudo().create({
+#                     'name': att.name,
+#                     'attachment_id': att.id,
+#                     # IMPORTANT for correct count
+#                     'partner_id': employee.work_contact_id.id if employee.work_contact_id else False,
+#                 })
+#                 created_count += 1
+
+#         return {
+#             'type': 'ir.actions.client',
+#             'tag': 'display_notification',
+#             'params': {
+#                 'title': 'Sync Completed',
+#                 'message': f'{created_count} documents synced for {employee.name}',
+#                 'type': 'success',
+#                 'sticky': False,
+#             }
+#         }
+    ################# Document sync code ends: Also related code present in tappy_employee################

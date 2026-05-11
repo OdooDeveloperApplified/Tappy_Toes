@@ -11,6 +11,7 @@
         'views/crm_template_views.xml',
         'views/crm_dashboard_views.xml',
         'views/customer_status_views.xml',
+        'views/parent_concern_views.xml',
         'views/qualified_lost_reason_views.xml',
         
     ],
