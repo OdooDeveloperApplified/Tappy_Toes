@@ -7,10 +7,16 @@
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <xpath expr="(//field[@name='partner_id'])[1]" position="after">
+                <field name="child_name"/>
+                <field name="child_age"/>
                 <field name="location_name"/>
             </xpath>
-
+            <xpath expr="(//field[@name='partner_id'])[2]" position="after">
+                <field name="child_name"/>
+                <field name="child_age"/>
+                <field name="location_name"/>
+            </xpath>
             <!-- For Opportunity -->
             <xpath expr="(//field[@name='user_id'])[1]" position="after">
                 <field name="lead_owner"/>

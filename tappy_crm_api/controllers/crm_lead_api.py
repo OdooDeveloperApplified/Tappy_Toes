@@ -5,6 +5,96 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+##################### Zapier webhook API:Starts #####################
+class ZapierLeadController(http.Controller):
+
+    @http.route(
+        '/create_lead',
+        type='http',  # Changed from 'json' to 'http'
+        auth='public',
+        methods=['POST'],
+        csrf=False
+    )
+    def create_lead(self, **kwargs):
+        try:
+             # Log request information
+            _logger.info("========== ZAPIER WEBHOOK RECEIVED ==========")
+            _logger.info("Content-Type: %s", request.httprequest.content_type)
+
+            raw_data = request.httprequest.data.decode('utf-8')
+            _logger.info("Raw Request Body: %s", raw_data)
+
+            # Handle JSON payload
+            # Parse payload
+            if 'application/json' in (request.httprequest.content_type or ''):
+                data = json.loads(raw_data)
+            else:
+                data = kwargs
+
+            _logger.info("Parsed Data: %s", data)
+
+            escalation = data.get('escalation_needed')
+
+            if escalation:
+                escalation = escalation.lower()
+
+            tag_ids = []
+
+            for tag_name in data.get('tags', '').split(','):
+                tag_name = tag_name.strip()
+
+                if not tag_name:
+                    continue
+
+                tag = request.env['crm.tag'].sudo().search(
+                    [('name', '=', tag_name)],
+                    limit=1
+                )
+
+                if not tag:
+                    tag = request.env['crm.tag'].sudo().create({
+                        'name': tag_name
+                    })
+
+                tag_ids.append(tag.id)
+            
+            lead_source = data.get('lead_source')
+
+            if lead_source:
+                lead_source = lead_source.lower().strip()
+
+            lead_vals = {
+                'name': data.get('fullname') or data.get('full_name') or 'Facebook Lead',
+                'contact_name': data.get('fullname') or data.get('full_name'),
+                'email_from': data.get('email'),
+                'phone': data.get('phone_number'),
+                'landing_page_url': data.get('landing_page_url'),
+                'escalation_needed': escalation,
+                'gclid': data.get('gclid'),
+                'fbclid': data.get('fbclid'),
+                'ttclid': data.get('ttclid'),
+                'lead_source': lead_source,
+                'tag_ids': [(6, 0, tag_ids)],
+            }
+            _logger.info("Lead Values: %s", lead_vals)
+
+            lead = request.env['crm.lead'].sudo().create(lead_vals)
+            _logger.info(
+                "Lead Created Successfully. Lead ID: %s",
+                lead.id
+            )
+
+            return json.dumps({
+                'success': True,
+                'lead_id': lead.id
+            })
+        except Exception as e:
+            _logger.exception("Error creating lead")
+            return json.dumps({
+                'success': False,
+                'error': str(e)
+            })
+##################### Zapier webhook API:Ends #####################
 
 class CrmLeadAPI(http.Controller):
 

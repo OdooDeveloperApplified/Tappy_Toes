@@ -27,6 +27,8 @@ class CrmLead(models.Model):
     )
     customer_status_ids = fields.Many2one('customer.status', string='Customer Status')
     lead_owner = fields.Char(string="Lead Owner")
+    child_name = fields.Char(string="Child's Name")
+    child_age = fields.Char(string="Child's Age")
 
     # Qualification fields
     preferred_offer = fields.Selection([
@@ -56,7 +58,7 @@ class CrmLead(models.Model):
     ], string="Decision Maker")
 
     # Sales workflow fields
-    last_contact_summary = fields.Text(string="Last Contact Summary", required=True)
+    last_contact_summary = fields.Text(string="Last Contact Summary")
     next_followup_date = fields.Date(string="Next Follow-up Date")
     contact_attempt_count = fields.Integer(string="Contact Attempt Count", default=0)
     coverage_fit = fields.Selection([
@@ -202,7 +204,7 @@ class CrmLead(models.Model):
             if stage == 'Won' and not lead.won_date:
                 raise ValidationError("Please enter Won Date to proceed.")
             
-            if stage == 'Qualified Lost' and not lead.close_reason:
+            if stage == 'Qualified Lost' and not lead.qualified_lost_reason_id:
                 raise ValidationError("Please provide Close Reason to proceed.")
     
 class QualifiedLostWizard(models.TransientModel):
@@ -224,7 +226,7 @@ class QualifiedLostWizard(models.TransientModel):
         self.lead_id.write({
             'stage_id': qualified_lost_stage.id,
             'active': True,  # Archive the lead
-            'qualified_lost_reason_id': self.qualified_lost_reason_id,
+            'qualified_lost_reason_id': self.qualified_lost_reason_id.id,
         })
         return {'type': 'ir.actions.act_window_close'}
 
@@ -238,8 +240,8 @@ class QualifiedLostReason(models.Model):
 
     def _compute_leads_count(self):
         lead_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
-            [('qualified_lost_reason', '!=', False)],
-            ['qualified_lost_reason'],
+            [('qualified_lost_reason_id', '!=', False)],
+            ['qualified_lost_reason_id'],
             ['__count'],
         )
         mapped_data = {lost_reason: count for lost_reason, count in lead_data}
@@ -250,7 +252,7 @@ class QualifiedLostReason(models.Model):
         return {
             'name': ('Leads'),
             'view_mode': 'list,form',
-            'domain': [('qualified_lost_reason', '!=', False)],
+            'domain': [('qualified_lost_reason_id', '=', self.id)],
             'res_model': 'crm.lead',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'active_test': False},
