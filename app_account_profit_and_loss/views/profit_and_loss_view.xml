@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+    <record id="action_account_report_pl_account_wise" model="ir.actions.client">
+        <field name="name">Account Wise Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <!--  <field name="path">profit-and-loss</field>  -->
+        <field name="context" eval="{'report_id': ref('app_account_profit_and_loss.account_wise_profit_and_loss')}"/>
+    </record>
+    <menuitem id="menu_action_account_report_profit_and_loss_account_wise" name="Account Wise Profit and Loss" action="action_account_report_pl_account_wise" parent="account.account_reports_legal_statements_menu" groups="account.group_account_readonly"/>
+    </data>
+</odoo>

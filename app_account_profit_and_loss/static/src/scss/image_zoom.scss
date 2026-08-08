@@ -1,0 +1,26 @@
+// Enlarge the hover-zoom preview popup used by widget="image" options="{'zoom': True}".
+// Scoped to tooltips containing .o_image_zoom so other tooltips are unaffected.
+.o-tooltip:has(.o_image_zoom) {
+    --bs-tooltip-max-width: 480px;
+    --bs-tooltip-bg: transparent;
+    --bs-tooltip-opacity: 1;
+    padding: 0;
+
+    .o_image_zoom img {
+        max-width: 500px;
+        max-height: 500px;
+        border-radius: 4px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+}
+
+// The little arrow pointing from the popup to the thumbnail; hide it since
+// there's no longer a solid tooltip background for it to visually connect to.
+.o-tooltip:has(.o_image_zoom) + .popover-arrow {
+    display: none;
+}
+
+// Click target for the full-page image viewer (app_image_viewer widget).
+.o_app_image_viewer_trigger {
+    cursor: pointer;
+}

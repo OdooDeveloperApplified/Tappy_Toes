@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="app_account_profit_and_loss.ImageFieldViewer" t-inherit="web.ImageField" t-inherit-mode="primary">
+        <xpath expr="//img" position="attributes">
+            <attribute name="t-on-click">onClickImage</attribute>
+            <attribute name="class" add="o_app_image_viewer_trigger" separator=" "/>
+        </xpath>
+    </t>
+</templates>

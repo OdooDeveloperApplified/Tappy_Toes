@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="hr_salary_rule_late_deduction" model="hr.salary.rule">
+            <field name="name">Late Attendance Deduction</field>
+            <field name="sequence" eval="150"/>
+            <field name="code">LATEDED</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = payslip.late_occurrences > 5</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -payslip.late_deduction_amount</field>
+        </record>
+        
+        <record id="view_hr_payslip_form_inherit_late_deduction" model="ir.ui.view">
+            <field name="name">hr.payslip.form.inherit.late.deduction</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='contract_id']" position="after">
+                    <field name="late_occurrences" invisible="late_occurrences == 0"/>
+                    <field name="total_late_minutes" invisible="late_occurrences &lt;= 5"/>
+                    <field name="late_deduction_amount" invisible="late_occurrences &lt;= 5"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

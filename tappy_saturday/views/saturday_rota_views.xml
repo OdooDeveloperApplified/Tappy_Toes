@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_saturday_rota_month_form" model="ir.ui.view">
+        <field name="name">hr.saturday.rota.month.form</field>
+        <field name="model">hr.saturday.rota.month</field>
+        <field name="arch" type="xml">
+            <form string="Monthly Saturday Rota">
+                <header>
+                    <button name="action_generate_lines" string="Generate Employees" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="month"/>
+                            <field name="year"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Employees">
+                            <div class="alert alert-info" role="alert" style="margin-bottom: 10px;">
+                                <div class="row">
+                                    <div class="col-2"><strong>Sat 1:</strong> <field name="date_sat_1_str" readonly="1"/></div>
+                                    <div class="col-2"><strong>Sat 2:</strong> <field name="date_sat_2_str" readonly="1"/></div>
+                                    <div class="col-2"><strong>Sat 3:</strong> <field name="date_sat_3_str" readonly="1"/></div>
+                                    <div class="col-2"><strong>Sat 4:</strong> <field name="date_sat_4_str" readonly="1"/></div>
+                                    <div class="col-2" invisible="not date_sat_5"><strong>Sat 5:</strong> <field name="date_sat_5_str" readonly="1"/></div>
+                                </div>
+                            </div>
+                            <field name="line_ids">
+                                <list editable="bottom" create="false" delete="false">
+                                    <field name="employee_id" readonly="1"/>
+                                    <field name="sat_1" string="Sat 1"/>
+                                    <field name="sat_2" string="Sat 2"/>
+                                    <field name="sat_3" string="Sat 3"/>
+                                    <field name="sat_4" string="Sat 4"/>
+                                    <field name="sat_5" string="Sat 5" column_invisible="parent.date_sat_5 == False"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_saturday_rota_month_tree" model="ir.ui.view">
+        <field name="name">hr.saturday.rota.month.tree</field>
+        <field name="model">hr.saturday.rota.month</field>
+        <field name="arch" type="xml">
+            <list string="Monthly Saturday Rota">
+                <field name="name"/>
+                <field name="month"/>
+                <field name="year"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_hr_saturday_rota_month" model="ir.actions.act_window">
+        <field name="name">Saturday Rota</field>
+        <field name="res_model">hr.saturday.rota.month</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_saturday_rota_month"
+              name="Saturday Rota"
+              parent="hr_attendance.menu_hr_attendance_root"
+              action="action_hr_saturday_rota_month"
+              sequence="25"/>
+</odoo>

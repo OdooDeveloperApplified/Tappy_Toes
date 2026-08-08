@@ -1,0 +1,23 @@
+<odoo>
+  <record id="action_profit_loss_dashboard" model="ir.actions.client">
+    <field name="name">Profit &amp; Loss Dashboard</field>
+    <field name="tag">profit_loss_dashboard</field>
+  </record>
+
+  <menuitem id="menu_profit_loss_dashboard"
+            name="P&amp;L Dashboard"
+            parent="account.menu_board_journal_1"
+            action="action_profit_loss_dashboard"
+            sequence="10"/>
+
+  <record id="action_consolidated_performance_dashboard" model="ir.actions.client">
+    <field name="name">Consolidated Dashboard</field>
+    <field name="tag">profit_loss_consolidated_dashboard</field>
+  </record>
+
+  <menuitem id="menu_consolidated_performance_dashboard"
+            name="Consolidated Dashboard"
+            parent="account.menu_board_journal_1"
+            action="action_consolidated_performance_dashboard"
+            sequence="20"/>
+</odoo>

@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+
+        <record id="group_create_check_access" model="res.groups">
+            <field name="name">Bill Validator</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <record id="group_hide_delete_account_move" model="res.groups">
+            <field name="name">Hide Delete Button (Accounting)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+    </data>
+</odoo>

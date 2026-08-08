@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="hr_salary_rule_saturday_deduction" model="hr.salary.rule">
+            <field name="name">Saturday Absence Deduction</field>
+            <field name="sequence" eval="155"/>
+            <field name="code">SATDED</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="struct_id" ref="l10n_ae_hr_payroll.uae_employee_payroll_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = payslip.saturday_absent_count > 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -payslip.saturday_deduction_amount</field>
+        </record>
+        
+        <record id="view_hr_payslip_form_inherit_saturday_deduction" model="ir.ui.view">
+            <field name="name">hr.payslip.form.inherit.saturday.deduction</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='contract_id']" position="after">
+                    <field name="saturday_absent_count" invisible="saturday_absent_count == 0"/>
+                    <field name="saturday_deduction_amount" invisible="saturday_absent_count == 0"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

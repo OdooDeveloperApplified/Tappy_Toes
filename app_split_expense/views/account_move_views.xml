@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_move_form_split_expense" model="ir.ui.view">
+        <field name="name">account.move.form.split.expense</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header/button[@name='action_post'][2]" position="attributes">
+                <attribute name="invisible">hide_post_button or move_type == 'entry' or display_inactive_currency_warning or (is_shared_expense and not is_already_split)</attribute>
+            </xpath>
+
+            <xpath expr="//header/button[@name='action_post'][2]" position="after">
+                <button name="action_split_expense" string="Split Expense" class="oe_highlight btn-warning" type="object" 
+                        invisible="move_type != 'in_invoice' or not is_shared_expense or is_already_split or state != 'draft'" 
+                        groups="base.group_multi_company" />
+            </xpath>
+            
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="is_already_split" invisible="1"/>
+                <field name="split_origin_id" invisible="move_type != 'in_invoice' or not split_origin_id"/>
+                
+                <field name="is_shared_expense" 
+                       invisible="move_type != 'in_invoice' or (is_already_split and not is_shared_expense)"
+                       readonly="state != 'draft' or is_already_split"/>
+                       
+                <!-- Editable for normal users -->
+                <field name="requested_shared_company_ids" widget="many2many_tags" 
+                       invisible="move_type != 'in_invoice' or not is_shared_expense"
+                       readonly="state != 'draft' or is_already_split"
+                       groups="!base.group_multi_company"
+                       options="{'no_create': True}" />
+                       
+                <!-- Readonly for managers -->
+                <field name="requested_shared_company_ids" widget="many2many_tags" 
+                       invisible="move_type != 'in_invoice' or not is_shared_expense"
+                       readonly="1"
+                       groups="base.group_multi_company"
+                       options="{'no_create': True}" />
+                       
+                <field name="shared_company_ids" widget="many2many_tags" 
+                       invisible="move_type != 'in_invoice' or not is_shared_expense"
+                       readonly="state != 'draft' or is_already_split"
+                       groups="base.group_multi_company"
+                       options="{'no_create': True}" />
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

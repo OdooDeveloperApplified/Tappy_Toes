@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attendance_report_line_tree_inherit" model="ir.ui.view">
+        <field name="name">attendance.report.line.tree.inherit</field>
+        <field name="model">attendance.report.line</field>
+        <field name="inherit_id" ref="tappy_attendance.view_attendance_report_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="total_days" position="after">
+                <field name="saturday_assigned" width="100px"/>
+                <field name="saturday_present_days" width="100px"/>
+                <field name="saturday_absent_days" width="100px"/>
+                <field name="saturday_na_days" width="100px"/>
+            </field>
+        </field>
+    </record>
+</odoo>

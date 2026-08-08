@@ -19,6 +19,7 @@
             </xpath>
             <!-- For Opportunity -->
             <xpath expr="(//field[@name='user_id'])[1]" position="after">
+                <field name="create_date"/>
                 <field name="lead_owner"/>
             </xpath>
 

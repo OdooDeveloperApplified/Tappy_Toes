@@ -85,7 +85,7 @@ class CompanyDocument(models.Model):
 
     #     for license in expiring_licenses:
     #         license.message_post(
-    #             body=f"License <b>{license.name}</b> is expiring on <b>{license.expiry_date}</b>."
+    #             body=f"⚠️ License <b>{license.name}</b> is expiring on <b>{license.expiry_date}</b>."
     #         )
 
 ################# Document sync code starts: Also related code present in tappy_employee################
@@ -96,7 +96,7 @@ class CompanyDocument(models.Model):
 #     @api.model
 #     def sync_employee_documents(self, employee_id=None):
 
-#         # If no employee passed → take first pending employee
+#         # 🔥 If no employee passed → take first pending employee
 #         if not employee_id:
 #             employee = self.env['hr.employee'].search([], limit=1)
 #         else:
@@ -147,3 +147,42 @@ class CompanyDocument(models.Model):
 #             }
 #         }
     ################# Document sync code ends: Also related code present in tappy_employee################
+
+# class DocumentSync(models.Model):
+#     _name = 'document.sync'
+#     _description = 'Sync Employee Attachments to Documents'
+
+#     @api.model
+#     def sync_employee_documents(self):
+
+#         BATCH_SIZE = 50
+#         offset = 0
+#         created_count = 0
+
+#         while True:
+#             attachments = self.env['ir.attachment'].search([
+#                 ('res_model', '=', 'hr.employee'),
+#                 ('type', '=', 'binary')
+#             ], limit=BATCH_SIZE, offset=offset)
+
+#             if not attachments:
+#                 break
+
+#             for att in attachments:
+#                 existing_doc = self.env['documents.document'].sudo().search([
+#                     ('attachment_id', '=', att.id)
+#                 ], limit=1)
+
+#                 if not existing_doc:
+#                     self.env['documents.document'].sudo().create({
+#                         'name': att.name,
+#                         'attachment_id': att.id,
+#                     })
+#                     created_count += 1
+
+#             # 🔥 VERY IMPORTANT
+#             self.env.cr.commit()
+
+#             offset += BATCH_SIZE
+
+#         return True

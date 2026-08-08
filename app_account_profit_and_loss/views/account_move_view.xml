@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="account_move_file_upload" model="ir.ui.view">
+            <field name="name">Account Move File Upload</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='purchase_vendor_bill_id']" position="after">
+                    <field name="file_upload" required="move_type == 'in_invoice'" widget="app_image_viewer" options="{'size': [120, 120]}"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_post'][2]" position="attributes">
+                    <attribute name="groups">app_account_profit_and_loss.group_create_check_access</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='button_cancel'][2]" position="attributes">
+                    <attribute name="groups">app_account_profit_and_loss.group_create_check_access</attribute>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

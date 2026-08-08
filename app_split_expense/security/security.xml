@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Revert standard employee company rule to allow read -->
+        <record id="base.res_company_rule_employee" model="ir.rule">
+            <field name="perm_read" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

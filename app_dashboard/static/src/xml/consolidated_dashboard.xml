@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+  <t t-name="ProfitLossConsolidatedDashboard">
+    <div class="container-fluid my-3 px-4 dashboard-container position-relative">
+
+      <!-- DASHBOARD OVERLAY LOADER -->
+      <t t-if="state.isLoading">
+        <div class="position-absolute w-100 h-100 top-0 start-0 d-flex flex-column align-items-center justify-content-center bg-view" 
+             style="opacity: 0.85; z-index: 1050; border-radius: 1rem; backdrop-filter: blur(5px);">
+          <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem; border-width: 0.25em;" role="status">
+            <span class="visually-hidden"></span>
+          </div>
+          <h5 class="mt-3 fw-bold text-primary" style="letter-spacing: 0.5px;">Loading Financials...</h5>
+        </div>
+      </t>
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start border-bottom bg-view dashboard-sticky-header">
+        
+        <div class="mb-3 mb-md-0">
+          <h2 class="fw-bold text-primary mb-0">
+            <i class="bi bi-graph-up-arrow"></i> Consolidated Profit &amp; Loss Dashboard
+          </h2>
+          <small class="text-muted">Overall financial summary across all companies</small>
+        </div>
+
+        <div class="d-flex flex-column align-items-md-end">
+          
+          <div class="bg-white p-1 rounded-pill border shadow-sm d-inline-flex align-items-center" style="font-size: 0.9rem;">
+            
+            <div class="position-relative">
+              <button class="btn rounded-pill fw-bold border-0 m-0" 
+                      t-att-style="state.currentFilter == 'month' ? 'background-color: #714B67; color: white; padding: 6px 20px;' : 'background: transparent; color: #4F5B69; padding: 6px 20px;'"
+                      t-on-click="() => this.setFilter('month')">Month</button>
+              
+              <t t-if="state.currentFilter == 'month'">
+                <div class="filter-navigator position-absolute top-100 start-50 translate-middle-x mt-2 bg-white p-1 rounded-pill border shadow-lg d-flex align-items-center justify-content-between" style="min-width: 200px; z-index: 1050;">
+                  <button class="btn rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm bg-light" style="width: 28px; height: 28px; padding: 0;" t-on-click="() => this.navigatePeriod(-1)">
+                    <i class="bi bi-chevron-left" style="color: #714B67; font-size: 0.85rem; font-weight: 900;"></i>
+                  </button>
+                  <span class="fw-bold text-dark text-center flex-grow-1 px-2" style="font-size: 0.85rem; white-space: nowrap;">
+                    <t t-esc="displayDateText"/>
+                  </span>
+                  <button class="btn rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm bg-light" style="width: 28px; height: 28px; padding: 0;" t-on-click="() => this.navigatePeriod(1)">
+                    <i class="bi bi-chevron-right" style="color: #714B67; font-size: 0.85rem; font-weight: 900;"></i>
+                  </button>
+                </div>
+              </t>
+            </div>
+            
+            <div class="position-relative">
+              <button class="btn rounded-pill fw-bold border-0 m-0" 
+                      t-att-style="state.currentFilter == 'quarter' ? 'background-color: #714B67; color: white; padding: 6px 20px;' : 'background: transparent; color: #4F5B69; padding: 6px 20px;'"
+                      t-on-click="() => this.setFilter('quarter')">Quarter</button>
+              
+              <t t-if="state.currentFilter == 'quarter'">
+                <div class="filter-navigator position-absolute top-100 start-50 translate-middle-x mt-2 bg-white p-1 rounded-pill border shadow-lg d-flex align-items-center justify-content-between" style="min-width: 200px; z-index: 1050;">
+                  <button class="btn rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm bg-light" style="width: 28px; height: 28px; padding: 0;" t-on-click="() => this.navigatePeriod(-1)">
+                    <i class="bi bi-chevron-left" style="color: #714B67; font-size: 0.85rem; font-weight: 900;"></i>
+                  </button>
+                  <span class="fw-bold text-dark text-center flex-grow-1 px-2" style="font-size: 0.85rem; white-space: nowrap;">
+                    <t t-esc="displayDateText"/>
+                  </span>
+                  <button class="btn rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm bg-light" style="width: 28px; height: 28px; padding: 0;" t-on-click="() => this.navigatePeriod(1)">
+                    <i class="bi bi-chevron-right" style="color: #714B67; font-size: 0.85rem; font-weight: 900;"></i>
+                  </button>
+                </div>
+              </t>
+            </div>
+
+            <div class="position-relative">
+              <button class="btn rounded-pill fw-bold border-0 m-0" 
+                      t-att-style="state.currentFilter == 'year' ? 'background-color: #714B67; color: white; padding: 6px 20px;' : 'background: transparent; color: #4F5B69; padding: 6px 20px;'"
+                      t-on-click="() => this.setFilter('year')">Year</button>
+              
+              <t t-if="state.currentFilter == 'year'">
+                <div class="filter-navigator position-absolute top-100 start-50 translate-middle-x mt-2 bg-white p-1 rounded-pill border shadow-lg d-flex align-items-center justify-content-between" style="min-width: 200px; z-index: 1050;">
+                  <button class="btn rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm bg-light" style="width: 28px; height: 28px; padding: 0;" t-on-click="() => this.navigatePeriod(-1)">
+                    <i class="bi bi-chevron-left" style="color: #714B67; font-size: 0.85rem; font-weight: 900;"></i>
+                  </button>
+                  <span class="fw-bold text-dark text-center flex-grow-1 px-2" style="font-size: 0.85rem; white-space: nowrap;">
+                    <t t-esc="displayDateText"/>
+                  </span>
+                  <button class="btn rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm bg-light" style="width: 28px; height: 28px; padding: 0;" t-on-click="() => this.navigatePeriod(1)">
+                    <i class="bi bi-chevron-right" style="color: #714B67; font-size: 0.85rem; font-weight: 900;"></i>
+                  </button>
+                </div>
+              </t>
+            </div>
+
+            <div class="position-relative">
+              <button class="btn rounded-pill fw-bold border-0 m-0" 
+                      t-att-style="state.currentFilter == 'custom' ? 'background-color: #714B67; color: white; padding: 6px 20px;' : 'background: transparent; color: #4F5B69; padding: 6px 20px;'"
+                      t-on-click="() => this.setFilter('custom')">Custom</button>
+              
+              <t t-if="state.currentFilter == 'custom'">
+                <div class="position-absolute top-100 end-0 mt-2 bg-white p-2 rounded-3 border shadow-lg d-flex align-items-end gap-3 px-3 py-2" style="width: max-content; z-index: 1050;">
+                  <div>
+                    <label class="form-label text-muted fw-bold mb-1" style="font-size: 0.7rem;">From Date</label>
+                    <DateTimeInput type="'date'" value="state.customFromDate" onChange="(date) => this.onCustomDateChange('customFromDate', date)" />
+                  </div>
+                  <div>
+                    <label class="form-label text-muted fw-bold mb-1" style="font-size: 0.7rem;">To Date</label>
+                    <DateTimeInput type="'date'" value="state.customToDate" onChange="(date) => this.onCustomDateChange('customToDate', date)" />
+                  </div>
+                </div>
+              </t>
+            </div>
+
+            <div class="position-relative ms-1">
+              <button class="btn rounded-pill fw-bold border-0 m-0 d-flex align-items-center gap-1"
+                      t-att-style="state.compareYear ? 'background-color: #714B67; color: white; padding: 6px 16px;' : 'background: transparent; color: #4F5B69; padding: 6px 16px;'"
+                      t-on-click="() => this.toggleCompareDropdown()">
+                <i class="bi bi-arrow-left-right"></i>
+                <t t-if="state.compareYear">Compare: <t t-esc="compareLabel"/></t>
+                <t t-if="!state.compareYear">Compare Year</t>
+              </button>
+
+              <t t-if="state.showCompareDropdown">
+                <div class="position-absolute top-100 end-0 mt-2 bg-white p-2 rounded-3 border shadow-lg" style="min-width: 170px; z-index: 1060;">
+                  <t t-foreach="availableCompareYears" t-as="yr" t-key="yr">
+                    <div class="dropdown-item rounded-2 px-2 py-1"
+                         t-attf-style="cursor:pointer; #{yr === state.compareYear ? 'background-color:#f2e7f1; font-weight:700;' : ''}"
+                         t-on-click="() => this.setCompareYear(yr)">
+                      <t t-esc="yr"/>
+                    </div>
+                  </t>
+                  <div class="d-flex align-items-center gap-1 mt-2 pt-2 border-top">
+                    <input type="number" class="form-control form-control-sm" placeholder="Custom year"
+                           t-on-change="(ev) => this.onCustomYearInput(ev)"/>
+                  </div>
+                  <t t-if="state.compareYear">
+                    <div class="dropdown-item rounded-2 px-2 py-1 text-danger mt-2" style="cursor:pointer;" t-on-click="() => this.clearCompareYear()">
+                      <i class="bi bi-x-circle"></i> Clear comparison
+                    </div>
+                  </t>
+                </div>
+              </t>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <t t-if="state.totalData and state.totalData.revenue">
+        <!-- COMPARATIVE FINANCIAL MATRIX TABLE (Displayed before KPI cards) -->
+        <div class="mb-4 p-4 shadow-sm bg-view rounded-3 border">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="fw-bold text-primary mb-1">
+                <i class="bi bi-table"></i> Company-Wise Financial Matrix
+              </h6>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead style="background-color: rgba(128, 128, 128, 0.12); border-bottom: 2px solid rgba(128, 128, 128, 0.25);">
+                <tr>
+                  <th class="py-3 px-3 text-uppercase fw-bold" style="font-size: 0.82rem; min-width: 220px; color: inherit; opacity: 0.95;">
+                    Accounts / Financial
+                  </th>
+                  <t t-foreach="state.companyData || []" t-as="comp" t-key="comp.company_name">
+                    <th class="py-3 px-3 text-end fw-bold" style="font-size: 0.85rem; min-width: 160px; color: inherit;">
+                      <i class="bi bi-building text-muted me-1"></i> <t t-esc="comp.company_name"/>
+                    </th>
+                  </t>
+                  <th class="py-3 px-3 text-end text-uppercase fw-bold text-primary" style="font-size: 0.82rem; min-width: 180px; border-left: 2px solid rgba(128, 128, 128, 0.2); background-color: rgba(128, 128, 128, 0.08);">
+                    Total of All (Consolidated)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <t t-foreach="this.tableRows" t-as="row" t-key="row.name">
+                  <tr t-att-style="row.highlight ? 'background-color: rgba(128, 128, 128, 0.08); font-weight: 700; border-bottom: 1px solid rgba(128, 128, 128, 0.15);' : 'border-bottom: 1px solid rgba(128, 128, 128, 0.12);'">
+                    <td class="py-3 px-3">
+                      <div class="d-flex align-items-center">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-2" 
+                              style="width: 28px; height: 28px; background-color: rgba(128, 128, 128, 0.18);">
+                          <i t-attf-class="bi #{row.icon}" t-att-style="row.color"></i>
+                        </span>
+                        <span t-att-class="row.isBold ? 'fw-bolder' : ''" style="color: inherit;"><t t-esc="row.name"/></span>
+                      </div>
+                    </td>
+                    <t t-foreach="row.companyValues" t-as="compVal" t-key="compVal.name + row.name">
+                      <td class="py-3 px-3 text-end" style="font-family: monospace; font-size: 1.05rem;">
+                        <div t-att-class="(row.isBold ? 'fw-bolder ' : '') + (compVal.isNegative ? 'text-danger' : '')"
+                              t-att-style="compVal.isNegative ? 'color: #ef4444 !important;' : 'color: inherit;'"><t t-esc="compVal.value"/></div>
+                        <t t-if="state.compareYear">
+                          <div class="text-muted" style="font-size: 0.95rem; font-weight: 500; font-family: inherit;">
+                            <span t-att-style="compVal.changePct !== null and compVal.changePct !== undefined ? (compVal.changePct >= 0 ? 'color:#059669;' : 'color:#dc2626;') : ''">
+                              <t t-esc="compVal.compareValue"/>
+                            </span>
+                            <t t-if="compVal.changePct !== null and compVal.changePct !== undefined">
+                              &#183;
+                              <span t-att-style="compVal.changePct >= 0 ? 'color:#059669; font-weight:700;' : 'color:#dc2626; font-weight:700;'">
+                                <t t-esc="(compVal.changePct >= 0 ? '+' : '') + compVal.changePct + '%'"/>
+                              </span>
+                            </t>
+                          </div>
+                        </t>
+                      </td>
+                    </t>
+                    <td class="py-3 px-3 text-end" style="font-family: monospace; font-size: 1.15rem; border-left: 2px solid rgba(128, 128, 128, 0.2); background-color: rgba(128, 128, 128, 0.08);">
+                      <div t-att-class="(row.isTotalNegative ? 'text-danger fw-bolder' : 'fw-bolder text-primary')"
+                            t-att-style="row.isTotalNegative ? 'color: #ef4444 !important;' : ''"><t t-esc="row.totalValue"/></div>
+                      <t t-if="state.compareYear">
+                        <div class="text-muted" style="font-size: 1rem; font-weight: 500; font-family: inherit;">
+                          <span t-att-style="row.totalChangePct !== null and row.totalChangePct !== undefined ? (row.totalChangePct >= 0 ? 'color:#059669;' : 'color:#dc2626;') : ''">
+                            <t t-esc="row.totalCompareValue"/>
+                          </span>
+                          <t t-if="row.totalChangePct !== null and row.totalChangePct !== undefined">
+                            &#183;
+                            <span t-att-style="row.totalChangePct >= 0 ? 'color:#059669; font-weight:700;' : 'color:#dc2626; font-weight:700;'">
+                              <t t-esc="(row.totalChangePct >= 0 ? '+' : '') + row.totalChangePct + '%'"/>
+                            </span>
+                          </t>
+                        </div>
+                      </t>
+                    </td>
+                  </tr>
+                </t>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <t t-foreach="this.cards" t-as="card" t-key="card.title">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+              <div t-attf-class="crm-card #{card.bg}">
+                <div class="top-row">
+                  <span class="crm-title text-truncate"><t t-esc="card.title"/></span>
+                  <div class="crm-icon">
+                    <i t-attf-class="bi #{card.icon}"></i>
+                  </div>
+                </div>
+                <div class="crm-value text-truncate w-100"><t t-esc="card.value"/></div>
+              </div>
+            </div>
+          </t>
+        </div>
+
+        <div class="mt-4 p-3 shadow-sm bg-white rounded">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold text-secondary mb-0">
+              <i class="bi bi-bar-chart"></i> Consolidated Profit &amp; Loss Overview
+            </h6>
+
+            <div class="dropdown">
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <t t-esc="(this.state.chartTypeMain || 'bar').replace(/^./, c => c.toUpperCase())"/> Chart
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" t-on-click="() => this.changeMainChartType('bar')">Bar</a></li>
+                <li><a class="dropdown-item" t-on-click="() => this.changeMainChartType('horizontalBar')">Horizontal Bar</a></li>
+                <li><a class="dropdown-item" t-on-click="() => this.changeMainChartType('line')">Line</a></li>
+                <li><a class="dropdown-item" t-on-click="() => this.changeMainChartType('pie')">Pie</a></li>
+              </ul>
+            </div>
+          </div>
+          <canvas id="pl_consolidated_chart" height="150" style="width:100%; max-height:400px;"></canvas>
+        </div>
+
+        <div class="mt-4 p-3 shadow-sm bg-white rounded">
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold text-secondary mb-0">
+              <i class="bi bi-graph-up"></i> Month-Wise Account Trend
+            </h6>
+            <div class="d-flex gap-2">
+              <t t-if="state.compareYear">
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <t t-esc="(accountFilterList.find(m => m.key === state.trendCompareMetric) || accountFilterList[0]).label"/>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <t t-foreach="accountFilterList" t-as="metric" t-key="metric.key">
+                      <li><a class="dropdown-item" t-on-click="() => this.setTrendCompareMetric(metric.key)"><t t-esc="metric.label"/></a></li>
+                    </t>
+                  </ul>
+                </div>
+              </t>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                  <t t-esc="(this.state.chartTypeTrend || 'line').replace(/^./, c => c.toUpperCase())"/> Chart
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" t-on-click="() => this.changeTrendChartType('line')">Line</a></li>
+                  <li><a class="dropdown-item" t-on-click="() => this.changeTrendChartType('area')">Area</a></li>
+                  <li><a class="dropdown-item" t-on-click="() => this.changeTrendChartType('bar')">Bar</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <canvas id="pl_trend_chart" height="150" style="width:100%; max-height:400px;"></canvas>
+        </div>
+
+        <div class="mt-5 p-3 shadow-sm bg-white rounded">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold text-secondary mb-0">
+              <i class="bi bi-bar-chart-line"></i> Company-Wise Comparison
+            </h6>
+
+            <div class="dropdown">
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <t t-esc="(this.state.chartTypeCompany || 'bar').replace(/^./, c => c.toUpperCase())"/> Chart
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" t-on-click="() => this.changeCompanyChartType('bar')">Bar</a></li>
+                <li><a class="dropdown-item" t-on-click="() => this.changeCompanyChartType('horizontalBar')">Horizontal Bar</a></li>
+                <li><a class="dropdown-item" t-on-click="() => this.changeCompanyChartType('line')">Line</a></li>
+                <li><a class="dropdown-item" t-on-click="() => this.changeCompanyChartType('pie')">Pie</a></li>
+              </ul>
+            </div>
+          </div>
+          <canvas id="pl_company_comparison_chart" height="180" style="width:100%; max-height:450px;"></canvas>
+        </div>
+      </t>
+
+      <t t-if="!(state.totalData and state.totalData.revenue)">
+        <div class="alert alert-info text-center mt-5">
+          No consolidated data available for the selected period.
+        </div>
+      </t>
+    </div>
+  </t>
+</templates>

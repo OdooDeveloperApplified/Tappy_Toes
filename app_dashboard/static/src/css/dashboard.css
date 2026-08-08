@@ -1,0 +1,146 @@
+/* Basic Typography Reset */
+p, span, a, ul, li, button {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+strong { font-weight: 600; }
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5em;
+  font-weight: 300;
+}
+
+.sub_title { font-size: 14px; }
+.sub_title div span { font-weight: 600; }
+
+.chart #canvas_graph { height: 400px !important; }
+.highcharts-background { fill: none; }
+
+/* Modern CRM Dashboard Styles - Fintech Split Hybrid Widget */
+.crm-card, .crm-card-opt2 {
+  border-radius: 0.85rem;
+  padding: 0.95rem 1.1rem;
+  color: white;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  text-align: left;
+  transition: all 0.25s ease;
+  min-height: 95px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.crm-card:hover, .crm-card-opt2:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+.crm-card .top-row, .crm-card-opt2 .top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+.crm-card .crm-icon, .crm-card-opt2 .crm-icon {
+  font-size: 1.25rem;
+  background: rgba(255, 255, 255, 0.2);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.crm-card .crm-title, .crm-card-opt2 .crm-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  opacity: 0.95;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.crm-card .crm-value, .crm-card-opt2 .crm-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Aurora Deep HSL Gradients (Option C) */
+.crm-bg-primary   { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); }
+.crm-bg-danger    { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); }
+.crm-bg-warning   { background: linear-gradient(135deg, #78350f 0%, #d97706 100%); }
+.crm-bg-success   { background: linear-gradient(135deg, #064e3b 0%, #059669 100%); }
+.crm-bg-secondary { background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%); }
+.crm-bg-dark      { background: linear-gradient(135deg, #1e293b 0%, #475569 100%); }
+.crm-bg-info, .crm-bg-turquoise { background: linear-gradient(135deg, #0c4a6e 0%, #06b6d4 100%); }
+
+.crm-bg-primary:hover,
+.crm-bg-danger:hover,
+.crm-bg-warning:hover,
+.crm-bg-success:hover,
+.crm-bg-secondary:hover,
+.crm-bg-dark:hover,
+.crm-bg-info:hover {
+  filter: brightness(1.15);
+  transition: 0.25s ease-in-out;
+}
+
+/* Dashboard scroll container */
+.dashboard-container, .container.my-5 {
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-bottom: 2rem;
+}
+
+.o_content { overflow-y: auto !important; }
+
+.dashboard-container::-webkit-scrollbar, .container.my-5::-webkit-scrollbar { width: 8px; }
+.dashboard-container::-webkit-scrollbar-thumb, .container.my-5::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+/* Section spacing */
+.company-section {
+  border-top: 2px solid #f2f2f2;
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+/* Style for the date navigation pill buttons */
+.filter-navigator .btn.rounded-circle {
+    background-color: #714B67 !important;
+    border: none !important;
+}
+
+/* Style for the icons inside the buttons */
+.filter-navigator .btn.rounded-circle i {
+    color: white !important;
+    font-weight: 900 !important;
+}
+
+/* Sticky Dashboard Header */
+.dashboard-sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    /* Tight, balanced spacing */
+    padding-top: 0.5rem;
+    padding-bottom: 0.75rem !important;
+    margin-bottom: 2rem !important;
+}
+
+/* Ensure dropdown period pill floats cleanly without altering layout heights */
+.filter-navigator {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+

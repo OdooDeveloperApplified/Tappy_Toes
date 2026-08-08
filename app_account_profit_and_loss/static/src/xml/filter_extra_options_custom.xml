@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterIEAccount">
+        <Dropdown
+            menuClass="'account_report_filter AccountIE'"
+        >
+            <button class="btn btn-secondary">
+                <i class="fa fa-folder-open me-1"/>Account
+            </button>
+
+            <t t-set-slot="content">
+                <div class="dropdown-item gap-2 align-items-center">
+                    <label>Income</label>
+                    <RecordSelector t-props="getRecordSelectorProps('account.account', 'income_account_id', [])"/>
+                </div>
+
+                <div class="dropdown-item gap-2 align-items-center">
+                    <label>Expense</label>
+                    <RecordSelector t-props="getRecordSelectorProps('account.account', 'expense_account_id', [])"/>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>
