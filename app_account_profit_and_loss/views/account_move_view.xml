@@ -19,6 +19,41 @@
                     <attribute name="groups">app_account_profit_and_loss.group_create_check_access</attribute>
                 </xpath>
 
+                <!-- 1. Add the boolean field to the view (invisible) so Odoo can evaluate it -->
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="is_restricted_manager" invisible="1"/>
+                </xpath>
+
+                <!-- 2. Hide Accounting Date (technical name: date) -->
+                <xpath expr="//field[@name='payment_reference']/preceding-sibling::field[@name='date'][1]" position="attributes">
+                    <attribute name="invisible" separator=" or " add="is_restricted_manager"/>
+                </xpath>
+
+                <!-- 3. Hide Recipient Bank (technical name: partner_bank_id) -->
+                <xpath expr="//field[@name='partner_bank_id']" position="attributes">
+                    <attribute name="invisible" separator=" or " add="is_restricted_manager"/>
+                </xpath>
+
+                <!-- 4. Hide Due Date Label and Field Container -->
+                <xpath expr="//div[@name='due_date']/preceding-sibling::div[hasclass('o_td_label')][1]" position="attributes">
+                    <attribute name="invisible" separator=" or " add="is_restricted_manager"/>
+                </xpath>
+                <xpath expr="//div[@name='due_date']" position="attributes">
+                    <attribute name="invisible" separator=" or " add="is_restricted_manager"/>
+                </xpath>
+
+                <!-- 5. Show Payment Method ONLY to the manager -->
+                <xpath expr="//div[@name='journal_div']" position="after">
+                    <label for="preferred_payment_method_line_id" string="Payment Method" invisible="is_restricted_manager == False"/>
+                    <field name="preferred_payment_method_line_id" nolabel="1" readonly="0" force_save="1" 
+                           domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]" 
+                           invisible="move_type in ('in_invoice', 'in_refund') or is_restricted_manager == False"/>
+                           
+                    <field name="preferred_payment_method_line_id" nolabel="1" readonly="0" force_save="1" 
+                           domain="[('payment_type', '=', 'outbound'), ('company_id', '=', company_id)]" 
+                           invisible="move_type in ('out_invoice', 'out_refund') or is_restricted_manager == False"/>
+                </xpath>
+
             </field>
         </record>
     </data>
